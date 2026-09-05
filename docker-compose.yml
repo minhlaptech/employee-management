@@ -1,0 +1,53 @@
+version: '3.8'
+
+services:
+  # ASP.NET Core Web API
+  api:
+    build:
+      context: .
+      dockerfile: src/EmployeeManagement.API/Dockerfile
+    ports:
+      - "5000:8080"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ConnectionStrings__DefaultConnection=Server=db;Database=EmployeeManagement;User Id=sa;Password=YourStr0ng!Password;TrustServerCertificate=True
+      - Jwt__Key=super-secret-key-for-development-only-minimum-32-characters
+      - Jwt__Issuer=EmployeeManagement.API
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      - employee-net
+
+  # SQL Server
+  db:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    environment:
+      - ACCEPT_EULA=Y
+      - MSSQL_SA_PASSWORD=YourStr0ng!Password
+    ports:
+      - "1433:1433"
+    volumes:
+      - sqldata:/var/opt/mssql
+    healthcheck:
+      test: /opt/mssql-tools18/bin/sqlcmd -S localhost -U sa -P "YourStr0ng!Password" -Q "SELECT 1" -C -b
+      interval: 10s
+      timeout: 3s
+      retries: 10
+    networks:
+      - employee-net
+
+  # Redis Cache (optional)
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+    networks:
+      - employee-net
+
+volumes:
+  sqldata:
+
+networks:
+  employee-net:
+    driver: bridge
