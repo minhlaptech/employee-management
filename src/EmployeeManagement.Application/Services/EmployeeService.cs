@@ -10,7 +10,7 @@ namespace EmployeeManagement.Application.Services;
 /// Orchestrates domain logic, data access, and DTO mapping.
 /// Follows the Service Layer pattern — thin controllers delegate here.
 /// </summary>
-public class EmployeeService
+public class EmployeeService : IEmployeeService
 {
     private readonly IUnitOfWork _unitOfWork;
 

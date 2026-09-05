@@ -1,0 +1,21 @@
+## Visual Studio / .NET
+bin/
+obj/
+*.user
+*.userosscache
+*.sln.docstates
+.vs/
+_ReSharper*/
+*.suo
+*.ide/
+
+## Node / Angular
+node_modules/
+dist/
+.angular/
+npm-debug.log
+yarn-error.log
+
+## OS Files
+.DS_Store
+Thumbs.db
